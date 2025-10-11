@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -76,4 +78,11 @@ dependencies {
     // Accompanist for permissions
     // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-permissions
     implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+
+    // Hilt for dependency injection
+    // https://mvnrepository.com/artifact/com.google.dagger/hilt-android
+    implementation("com.google.dagger:hilt-android:2.57.2")
+    // https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+    kapt("com.google.dagger:hilt-compiler:2.57.2")
 }
