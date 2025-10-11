@@ -56,4 +56,24 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Material
+    // https://mvnrepository.com/artifact/com.google.android.material/material
+    implementation("com.google.android.material:material:1.13.0")
+
+    val nav_version = "2.9.5"
+
+    // Jetpack Compose integration
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    // JSON serialization library, works with the Kotlin serialization plugin
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    // Compose UI
+    // https://mvnrepository.com/artifact/androidx.compose.foundation/foundation
+    implementation("androidx.compose.foundation:foundation:1.9.1")
+
+    // Accompanist for permissions
+    // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
 }
