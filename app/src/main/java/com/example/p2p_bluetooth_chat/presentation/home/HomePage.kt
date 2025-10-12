@@ -59,14 +59,14 @@ fun HomePage(
         homeViewModel.hasBluetoothPermission()
 
         onDispose {
-            homeViewModel.stopScanning()
+            homeViewModel.stopBleServices()
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
     LaunchedEffect(hasBluetoothPermission) {
         if(hasBluetoothPermission) {
-            homeViewModel.startScanning()
+            homeViewModel.startBleServices()
         }
     }
 
@@ -84,7 +84,8 @@ fun HomePage(
                         launcher.launch(arrayOf(
                             android.Manifest.permission.BLUETOOTH_SCAN,
                             android.Manifest.permission.BLUETOOTH_ADVERTISE,
-                            android.Manifest.permission.BLUETOOTH_CONNECT
+                            android.Manifest.permission.BLUETOOTH_CONNECT,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION
                         ))
                     } else {
                         launcher.launch(arrayOf(
@@ -130,7 +131,7 @@ fun HomePage(
 
                 Button(
                     onClick = {
-                        homeViewModel.startScanning()
+                        homeViewModel.startBleServices()
                     }
                 ) {
                     Text(
@@ -140,5 +141,4 @@ fun HomePage(
             }
         }
     }
-
 }
