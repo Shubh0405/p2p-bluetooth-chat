@@ -1,4 +1,4 @@
-package com.example.p2p_bluetooth_chat.utils
+package com.example.p2p_bluetooth_chat.bluetooth_utils
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -10,6 +10,7 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.util.Log
 import androidx.annotation.RequiresPermission
+import com.example.p2p_bluetooth_chat.utils.BluetoothConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -37,6 +38,9 @@ class BleScanner(context: Context) {
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     private fun handleResult(result: ScanResult) {
+
+        Log.d("BleScanner", "Discovered device: ${result.device.address} with RSSI: ${result.rssi}, uuids: ${result.scanRecord?.serviceUuids}")
+
         val device = result.device
         val record = result.scanRecord ?: return
         val uuids = record.serviceUuids ?: return

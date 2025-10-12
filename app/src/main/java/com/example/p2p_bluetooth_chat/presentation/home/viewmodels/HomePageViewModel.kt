@@ -3,15 +3,12 @@ package com.example.p2p_bluetooth_chat.presentation.home.viewmodels
 import android.Manifest
 import android.app.Application
 import android.bluetooth.BluetoothManager
-import android.content.Context
 import android.content.pm.PackageManager
 import androidx.annotation.RequiresPermission
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.p2p_bluetooth_chat.utils.BleDevice
-import com.example.p2p_bluetooth_chat.utils.BleScanner
+import com.example.p2p_bluetooth_chat.bluetooth_utils.BleDevice
+import com.example.p2p_bluetooth_chat.bluetooth_utils.BleScanner
 import com.example.p2p_bluetooth_chat.utils.enums.BleScanProgress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
