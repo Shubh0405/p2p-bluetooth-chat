@@ -3,10 +3,14 @@ package com.example.p2p_bluetooth_chat.presentation.home
 import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -22,15 +26,16 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.example.p2p_bluetooth_chat.bluetooth_utils.BleDevice
 import com.example.p2p_bluetooth_chat.presentation.home.viewmodels.HomePageViewModel
 import com.example.p2p_bluetooth_chat.utils.enums.BleScanProgress
 
 @SuppressLint("MissingPermission")
 @Composable
 fun HomePage(
-    modifier: Modifier
+    modifier: Modifier,
+    onDeviceClick: (BleDevice) -> Unit
 ) {
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val homeViewModel: HomePageViewModel = hiltViewModel()
@@ -48,12 +53,12 @@ fun HomePage(
     }
 
     DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver {
-            _, event ->
+        val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
                     homeViewModel.hasBluetoothPermission()
                 }
+
                 else -> {}
             }
         }
@@ -70,12 +75,12 @@ fun HomePage(
     }
 
     LaunchedEffect(hasBluetoothPermission) {
-        if(hasBluetoothPermission) {
+        if (hasBluetoothPermission) {
             homeViewModel.startBleServices()
         }
     }
 
-    if(!hasBluetoothPermission) {
+    if (!hasBluetoothPermission) {
         Column(
             modifier = modifier.fillMaxSize()
         ) {
@@ -85,17 +90,21 @@ fun HomePage(
             Spacer(modifier = Modifier.height(5.dp))
             Button(
                 onClick = {
-                    if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                        launcher.launch(arrayOf(
-                            android.Manifest.permission.BLUETOOTH_SCAN,
-                            android.Manifest.permission.BLUETOOTH_ADVERTISE,
-                            android.Manifest.permission.BLUETOOTH_CONNECT,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION
-                        ))
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        launcher.launch(
+                            arrayOf(
+                                android.Manifest.permission.BLUETOOTH_SCAN,
+                                android.Manifest.permission.BLUETOOTH_ADVERTISE,
+                                android.Manifest.permission.BLUETOOTH_CONNECT,
+                                android.Manifest.permission.ACCESS_FINE_LOCATION
+                            )
+                        )
                     } else {
-                        launcher.launch(arrayOf(
-                            android.Manifest.permission.ACCESS_FINE_LOCATION
-                        ))
+                        launcher.launch(
+                            arrayOf(
+                                android.Manifest.permission.ACCESS_FINE_LOCATION
+                            )
+                        )
                     }
                 }
             ) {
@@ -108,22 +117,31 @@ fun HomePage(
         Column(
             modifier = modifier.fillMaxSize()
         ) {
-           if (bleScanState.progress == BleScanProgress.IN_PROGRESS) {
-               Text(
-                   text = "Scanning for devices...",
-               )
-           } else if (bleScanState.progress == BleScanProgress.COMPLETED) {
-               Text(
-                   text = "Scan completed. Found ${bleScanState.devices.size} device(s).",
-               )
-           }
+            if (bleScanState.progress == BleScanProgress.IN_PROGRESS) {
+                Text(
+                    text = "Scanning for devices...",
+                )
+            } else if (bleScanState.progress == BleScanProgress.COMPLETED) {
+                Text(
+                    text = "Scan completed. Found ${bleScanState.devices.size} device(s).",
+                )
+            }
 
             Spacer(modifier = Modifier.height(10.dp))
             LazyColumn {
                 items(count = bleScanState.devices.size) { index ->
-                    Text(
-                        text = "${bleScanState.devices[index].name} - ${bleScanState.devices[index].address}"
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clickable {
+                                onDeviceClick(bleScanState.devices[index])
+                            }
+                    ) {
+                        Text(
+                            text = "${bleScanState.devices[index].name} - ${bleScanState.devices[index].address}"
+                        )
+                    }
                 }
             }
 

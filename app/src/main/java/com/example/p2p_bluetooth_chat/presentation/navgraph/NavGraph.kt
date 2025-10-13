@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.p2p_bluetooth_chat.bluetooth_utils.BleDevice
 import com.example.p2p_bluetooth_chat.presentation.chat.ChatScreen
 import com.example.p2p_bluetooth_chat.presentation.home.HomePage
 
@@ -22,16 +23,27 @@ fun NavGraph(
         ) {
             HomePage(
                 modifier = modifier
-            )
+            ) { bleDevice ->
+                navigateToChatScreen(navController, bleDevice)
+            }
         }
 
         composable(
             route = Routes.ChatScreen.route
         ) {
-            ChatScreen(
-                modifier = modifier
-            )
+            navController.previousBackStackEntry?.savedStateHandle?.get<BleDevice>("bleDevice")?.let { bleDevice ->
+                // You can use the bleDevice object here if needed
+                ChatScreen(
+                    modifier = modifier,
+                    bleDevice = bleDevice
+                )
+            }
         }
     }
 
+}
+
+fun navigateToChatScreen(navController: NavHostController, bleDevice: BleDevice) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("bleDevice", bleDevice)
+    navController.navigate(Routes.ChatScreen.route)
 }
