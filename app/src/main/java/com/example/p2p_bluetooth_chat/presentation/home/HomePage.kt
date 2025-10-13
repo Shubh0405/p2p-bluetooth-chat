@@ -43,6 +43,10 @@ fun HomePage(
         homeViewModel.setBluetoothPermission(permissions.all { it.value })
     }
 
+    LaunchedEffect(Unit) {
+        homeViewModel.startGattServer()
+    }
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver {
             _, event ->
@@ -60,6 +64,7 @@ fun HomePage(
 
         onDispose {
             homeViewModel.stopBleServices()
+            homeViewModel.stopGattServer()
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }

@@ -2,6 +2,7 @@ package com.example.p2p_bluetooth_chat.bluetooth_utils
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
@@ -21,7 +22,8 @@ import kotlinx.coroutines.launch
 data class BleDevice(
     val name: String?,
     val address: String,
-    val rssi: Int
+    val rssi: Int,
+    val bluetoothDevice: BluetoothDevice
 )
 
 class BleScanner(context: Context) {
@@ -50,7 +52,8 @@ class BleScanner(context: Context) {
             val bleDevice = BleDevice(
                 name = device.name ?: "Unknown Device",
                 address = device.address,
-                rssi = result.rssi
+                rssi = result.rssi,
+                bluetoothDevice = device
             )
             discoveredDevices[device.address] = bleDevice
             CoroutineScope(Dispatchers.IO).launch {

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.p2p_bluetooth_chat.bluetooth_utils.BleAdvertiser
 import com.example.p2p_bluetooth_chat.bluetooth_utils.BleDevice
+import com.example.p2p_bluetooth_chat.bluetooth_utils.BleGattServer
 import com.example.p2p_bluetooth_chat.bluetooth_utils.BleScanner
 import com.example.p2p_bluetooth_chat.utils.enums.BleScanProgress
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,6 +33,7 @@ class HomePageViewModel @Inject constructor(
 
     private val scanner = BleScanner(application)
     private val advertiser = BleAdvertiser(application)
+    private val gattServer = BleGattServer(application)
 
     private val _bleScanState = MutableStateFlow<BleScanState>(
         BleScanState(
@@ -120,6 +122,16 @@ class HomePageViewModel @Inject constructor(
         _bleScanState.value = _bleScanState.value.copy(
             progress = BleScanProgress.COMPLETED
         )
+    }
+
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    fun startGattServer() {
+        gattServer.startServer()
+    }
+
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    fun stopGattServer() {
+        gattServer.stopServer()
     }
 
     fun setBluetoothPermission(value: Boolean) {
